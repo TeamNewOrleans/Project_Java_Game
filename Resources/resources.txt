@@ -1,0 +1,12 @@
+1. Workshop: rabotilnica za igra na Java – video from SoftUni
+https://softuni.bg/trainings/resources/video/6526/video-2-november-2015-bogomil-dimitrov-java-fundamentals-october-2015
+
+2. Info form SoftUni Forum 
+https://softuni.bg/forum/1014/useful-info-java-basics-2d-games-tutorials
+
+3. Java 2D games tutorial
+http://zetcode.com/tutorials/javagamestutorial/
+
+4. Programming “Snake” in Java (Full tutorial) – video
+https://www.youtube.com/watch?v=S_n3lryyGZM
+
