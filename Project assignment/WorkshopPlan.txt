@@ -7,6 +7,8 @@
 
 - Declare a constructor with params {width, height, title}
 
+
+
 ----->1.2<-----
 Create Launcher Class
 /*Has the main() method of the application*////Demo --> Call a new Display([]params) object in the Launcher
@@ -14,8 +16,11 @@ Create Launcher Class
 A new Window should appear
 
 
+
+
 ----->2<-----
 Creating Canvas, Showing images on Canvas
+
 
 ----->2.1<-----
 Create Canvas object in Display class
@@ -32,6 +37,7 @@ Create Canvas object in Display class
 Nothing changes because nothing is drawn on the canvas
 
 
+
 ----->2.2<-----Create a Game class
 /*It will hold the main class*/
 
@@ -43,7 +49,10 @@ Nothing changes because nothing is drawn on the canvas
 Assure everything is display correctly
 
 
+
+
 ----->3<------Creating Threads and Loops
+
 
 ----->3.1<-----
 Short and understandable definition of a thread:
@@ -55,10 +64,12 @@ the maximum capacity
 in order to process two things at once."
 
 
+
 ----->3.2<-----Implement Runnable interface
 /*It allows the class to be put on a separate thread*/
 
 - Define a run() method that comes from the interface
+
 
 
 ----->3.3<-----Define a synchronized start method to start the thread
@@ -73,6 +84,7 @@ Define a synchronized stop method to stop the thread
 - Define the stop() method
 - Call the join() method on the thread in order to stop it
 from working
+
 
 
 ----->3.4<------
@@ -105,7 +117,10 @@ Demo-> Instantiate a Game object in the Launcher class and
 ///call the start() method of that object
 
 
+
+
 ----->4<-----Buffers and Drawing
+
 
 ----->4.1<------Create the render method
 
@@ -133,8 +148,11 @@ The screen
 ///should be gray
 
 
+
+
 ------>5<-------
 Rectangles and Images
+
 
 ------>5.1<-----
 - Explain Canvas' coordinate system
@@ -143,6 +161,7 @@ Rectangles and Images
 in the graphics
 
 - Overlap rectangles, put negative coordinates etc.
+
 
 
 ------>5.2<-----
@@ -155,6 +174,7 @@ resource type of folder
 
 /*Click the project->properties. Go to the Build Path and 
 click Add Class Folder*/
+
 
 
 ------>5.3<-----
@@ -177,6 +197,7 @@ for example
 ///set it's parameters to {imageVariable, width, height, null}
 
 
+
 ------->5.4<-----
 Use a Sprite Sheet
 
@@ -196,6 +217,7 @@ Call the drawImage method with
 ///g.drawImage(spriteSheet.crop(0,0,95,130), 5, 5, null) params
 
 
+
 ------->5.5<------Assets
 /*Any type of texture/image/sound*/
 
@@ -206,6 +228,8 @@ Call the drawImage method with
 use
 
 - Initialize every image as cropped from the SpriteSheet
+
+
 
 
 ------->6<-------Fixing the tick() method to run correctly
@@ -222,6 +246,8 @@ on slow and on fast computers the same speed*/
 *
 - If we want we can add a timer that will check if we are 
 rendering in 60 fps
+
+
 
 
 ------->7<-------States
@@ -253,6 +279,8 @@ Be sure to always set the currentState to game state as we
 ///do not have any more options yet
 
 
+
+
 -------->8<--------
 Creating a player
 
@@ -266,6 +294,8 @@ Creating a player
 
 - Create a render() method
 ///Demo-> Test out that the player is visible
+
+
 
 
 ------->9<--------

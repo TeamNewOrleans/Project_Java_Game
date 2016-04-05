@@ -1,6 +1,7 @@
 package game;
 
 import display.Display;
+import gfx.ImageLoader;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -39,9 +40,10 @@ public class Game implements Runnable {
         }
 
         this.g = this.bs.getDrawGraphics();
+        g.clearRect(0, 0, Display.WIDTH, Display.HEIGHT); // LG: clear the screen on every frame
 
         //Start drawing
-
+            g.drawImage(ImageLoader.loadImage("/textures/bckg.jpg"), 0, 0, null); // LG: draw the Background image
         //End drawing
 
         this.g.dispose();
