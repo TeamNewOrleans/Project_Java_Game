@@ -27,6 +27,23 @@ public class Display extends Canvas {
         frame.setVisible(true);
         frame.setFocusable(true);
 
+
+        JMenuBar menuBar = new JMenuBar();
+
+        JMenu menuFile = new JMenu("New Game");
+        menuBar.add(menuFile);
+
+
+        JMenu menuExit = new JMenu("Exit");
+        menuBar.add(menuExit);
+
+        JMenu menuAbout = new JMenu("About");
+        menuBar.add(menuAbout);
+
+        this.frame.setJMenuBar(menuBar);
+        this.frame.setVisible(true);
+
+
         canvas = new Canvas();
         canvas.setPreferredSize(new Dimension(width, height));
         canvas.setMaximumSize(new Dimension(width, height));
