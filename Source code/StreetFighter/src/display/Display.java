@@ -1,14 +1,20 @@
 package display;
 
+import game.Game;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Display extends Canvas {
+public class Display extends Canvas implements ActionListener {
     private JFrame frame;
     private Canvas canvas;
 
     private String title;
     private int width, height;
+
+    private JMenuItem menuExit;
 
     public Display(String title, int width, int height) {
         this.title = title;
@@ -30,14 +36,14 @@ public class Display extends Canvas {
 
         JMenuBar menuBar = new JMenuBar();
 
-        JMenu menuFile = new JMenu("New Game");
+        JMenuItem menuFile = new JMenuItem("New Game");
         menuBar.add(menuFile);
 
-
-        JMenu menuExit = new JMenu("Exit");
+        menuExit = new JMenuItem("Exit");
+        menuExit.addActionListener(this);
         menuBar.add(menuExit);
 
-        JMenu menuAbout = new JMenu("About");
+        JMenuItem menuAbout = new JMenuItem("About");
         menuBar.add(menuAbout);
 
         this.frame.setJMenuBar(menuBar);
@@ -55,5 +61,11 @@ public class Display extends Canvas {
 
     public Canvas getCanvas() {
         return this.canvas;
+    }
+
+    public void actionPerformed(ActionEvent ae) {
+        if (ae.getSource() == menuExit) {
+            System.exit(0);
+        }
     }
 }
