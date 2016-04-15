@@ -19,12 +19,20 @@ public class Game implements Runnable {
     private boolean isRunning = false;
     private Thread thread;
 
+    private InputHandler inputHandler;
+    public static Player player;
+
     public Game(String name) {
         this.title = name;
     }
 
     private void init() {
+
         this.display = new Display(this.title, WIDTH, HEIGHT);
+
+
+        this.inputHandler = new InputHandler(this.display);
+        player = new Player();
     }
 
     private void tick() {
