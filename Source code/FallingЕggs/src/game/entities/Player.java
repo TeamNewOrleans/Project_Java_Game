@@ -19,8 +19,8 @@ public class Player {
         this.y = y;
         this.hitPoints = hitPoints;
         this.velocity = 20;
-        this.width = 108;
-        this.height = 140;
+        this.width = 132;
+        this.height = 131;
         this.img = Assets.player;
         this.boundingBox = new Rectangle(x, y, this.width, this.height);
     }

@@ -26,22 +26,22 @@ public class MouseInput implements MouseListener {
 
         int mx = e.getX();
         int my = e .getY();
-        if (mx >= (800-120)/2 && mx <= (800+120)/2){
-            if (my >= 180 && my <= 230){
+        if (mx >= (400-74) && mx <= (400+74)){
+            if (my >= 180+40 && my <= 180+68){
                 //Pressed Play Button
                 Game.State = Game.STATE.GAME;
             }
         }
 
-        if (mx >= (800-120)/2 && mx <= (800+120)/2){
-            if (my >= 280 && my <= 330){
+        if (mx >= 400-74 && mx <= 400+74){
+            if (my >= 180+90 && my <= 180+118){
                 //Pressed Help Button
 
             }
         }
 
-        if (mx >= (800-120)/2 && mx <= (800+120)/2){
-            if (my >= 380 && my <= 430){
+        if (mx >= 400-74 && mx <= 400+74){
+            if (my >= 180+140 && my <= 180+168){
                 //Pressed Exit Button
                 System.exit(1);
             }

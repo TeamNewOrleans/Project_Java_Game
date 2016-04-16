@@ -13,6 +13,7 @@ import display.Menu;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.sql.Time;
 import java.util.ArrayList;
 
@@ -34,7 +35,7 @@ public class Game extends MouseInput implements Runnable {
     // private int l3 = -500;
     //  private int l4 = -100;
     private int col;
-    private Player boy;
+    private Player rabbit;
     private ArrayList<Egg> eggs;
     private ArrayList<Ducky> duckies;
     //  private Ducky ducky;
@@ -47,6 +48,7 @@ public class Game extends MouseInput implements Runnable {
     private BufferStrategy bufferStrategy;   //начина по който ние контролираме обектите да се визуализират
     private Graphics graphics;//този койот ги изрисува
     private SpriteSheet spriteSheet;
+    private BufferedImage bckg; // game background
 
     private Menu menu;
 
@@ -70,20 +72,23 @@ public class Game extends MouseInput implements Runnable {
         Assets.init();
         this.display = new Display(this.name, this.width, this.height);
         this.ih = new InputHandler(this.display.getCanvas());
-        this.boy = new Player(120, 400, 0);
+        this.rabbit = new Player(120, 450, 0);
+
+        this.bckg = Assets.background; // initialize game background image
+
         //  this.egg = new Egg(300, 450, 148, 125);
         //
         this.stones = new ArrayList<>();
-        stones.add(new Stone(250, 0, 30, 30, 5));
-        stones.add(new Stone(550, 0, 30, 30, 2));
+        stones.add(new Stone(250, 0, 27, 17, 5));
+        stones.add(new Stone(550, 0, 27, 17, 2));
 
         this.duckies = new ArrayList<>();
-        duckies.add(new Ducky(350, 0, 100, 80, 4));
-        duckies.add(new Ducky(600, 0, 100, 80, 6));
+        duckies.add(new Ducky(350, 0, 33, 36, 4));
+        duckies.add(new Ducky(600, 0, 33, 36, 6));
 
         this.eggs = new ArrayList<>();
-        eggs.add(new Egg(150, 0, 148, 125, 3));
-        eggs.add(new Egg(450, 0, 148, 125, 1));
+        eggs.add(new Egg(150, 0, 20, 25, 3));
+        eggs.add(new Egg(450, 0, 20, 25, 1));
 
         menu = new Menu();
         this.mi = new MouseInput(this.display.getCanvas());
@@ -97,7 +102,7 @@ public class Game extends MouseInput implements Runnable {
         //  isEsc = false;
 
         if (State == STATE.GAME) {
-            this.boy.tick();
+            this.rabbit.tick();
             for (int i = 0; i < eggs.size(); i++) {
                 if (this.eggs.get(i) != null) {
                     this.eggs.get(i).tick();
@@ -143,32 +148,32 @@ public class Game extends MouseInput implements Runnable {
             //  this.l4 = +20;
 
             for (int i = 0; i < eggs.size(); i++) {
-                if (this.eggs.get(i) != null && this.boy.boundingBox.intersects(this.eggs.get(i).boundingBox)) {
-                    this.boy.addDamega(5);
+                if (this.eggs.get(i) != null && this.rabbit.boundingBox.intersects(this.eggs.get(i).boundingBox)) {
+                    this.rabbit.addDamega(5);
                     eggs.remove(this.eggs.get(i));
                 }
             }
 
             for (int i = 0; i < duckies.size(); i++) {
-                if (this.duckies.get(i) != null && this.boy.boundingBox.intersects(this.duckies.get(i).boundingBox)) {
-                    this.boy.addDamega(10);
+                if (this.duckies.get(i) != null && this.rabbit.boundingBox.intersects(this.duckies.get(i).boundingBox)) {
+                    this.rabbit.addDamega(10);
                     duckies.remove(this.duckies.get(i));
                 }
             }
 
             for (int i = 0; i < stones.size(); i++) {
-                if (this.stones.get(i) != null && this.boy.boundingBox.intersects(this.stones.get(i).boundingBox)) {
-                    this.boy.takeDamega(20);
+                if (this.stones.get(i) != null && this.rabbit.boundingBox.intersects(this.stones.get(i).boundingBox)) {
+                    this.rabbit.takeDamega(20);
                     stones.remove(this.stones.get(i));
                 }
             }
 
-            if (this.boy.hitPoints >= 30) {
-                System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.boy.hitPoints);
+            if (this.rabbit.hitPoints >= 30) {
+                System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.rabbit.hitPoints);
 
                // isStop = true;
                 this.stop();
-            }else if (this.boy.hitPoints < 0){
+            }else if (this.rabbit.hitPoints < 0){
                 System.out.printf("Sorry, all the eggs are broken!");
                 this.stop();
             }
@@ -188,11 +193,16 @@ public class Game extends MouseInput implements Runnable {
         this.graphics.clearRect(0, 0, this.width, this.height);
 
         //Start drowing
-        this.graphics.drawImage(ImageLoader.loadImage("/bng.jpg"), 0, 0, 800, 600, null);
+        //this.graphics.drawImage(ImageLoader.loadImage("/bng.jpg"), 0, 0, 800, 600, null);
+
+        this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
+
 
         if (State == STATE.GAME) {
 
-            this.boy.render(this.graphics);
+            this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
+
+            this.rabbit.render(this.graphics);
             for (int i = 0; i < eggs.size(); i++) {
                 if (this.eggs.get(i) != null) {
                     this.eggs.get(i).render(this.graphics);
@@ -243,7 +253,7 @@ public class Game extends MouseInput implements Runnable {
     public void run() {
         this.init(); //инизиализация
 
-        int fps = 60;//60 фрейме се преизчисляват и пренарисъват за секунда, 60 за секунда
+        int fps = 15;//60 фрейме се преизчисляват и пренарисъват за секунда, 60 за секунда// change to 15 fps to be slower
 
         double timePerFrame = 1_000_000_000 / fps; //колко време трябва да се изчака на всяко визуализиране
         double delta = 0;
@@ -256,7 +266,7 @@ public class Game extends MouseInput implements Runnable {
             delta += (now - lastTimeTicked) / timePerFrame;
             lastTimeTicked = now;
            // System.out.println(delta);
-            System.out.printf("Your eggs are: %d\n", this.boy.hitPoints);
+            System.out.printf("Your eggs are: %d\n", this.rabbit.hitPoints);
 
             if (delta >= 1) {
                 try {
