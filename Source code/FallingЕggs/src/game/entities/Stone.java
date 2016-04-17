@@ -3,6 +3,7 @@ package game.entities;
 import game.Game;
 import gfx.Assets;
 import gfx.ImageLoader;
+import gfx.SpriteSheet;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -10,8 +11,11 @@ import java.util.Random;
 
 public class Stone {
     private int x, y, width, height;
+    private int colum = 0; // set column of first stone sprite
     public Rectangle boundingBox;
-    private BufferedImage img;
+    //private BufferedImage img; // this is for static stone
+    private SpriteSheet roundStone;// for rounded stones
+
     Random random = new Random();
 
     public Stone(int x, int y, int width, int height) {
@@ -20,7 +24,7 @@ public class Stone {
         this.width = width;
         this.height = height;
         this.boundingBox = new Rectangle(x, y, width, height);
-        this.img = Assets.stone;
+        this.roundStone = Assets.stoneSheet; // rounded stone
     }
 
     public  void tick() {
@@ -30,12 +34,19 @@ public class Stone {
             this.x = random.nextInt(Game.WIDTH - Game.MAX_X);
         }
 
+        //rounded stones
+        this.colum++;
+        this.colum %= 23; //за да се върнем на първата картинка
+
         this.boundingBox.setBounds(this.x, this.y, this.width, this.height); //ъпдейдваме боиндинбокса
     }
 
 
     public void render(Graphics g){
-        g.drawImage(this.img, x, this.y, this.width, this.height, null);
+
+
+        //g.drawImage(this.img, x, this.y, this.width, this.height, null); // draw static stone
+        g.drawImage(this.roundStone.crop(this.colum*this.width, 308, this.width, this.height), this.x, this.y, null); // draw the rounded stones
     }
 
     public int getY(){

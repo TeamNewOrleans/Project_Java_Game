@@ -40,13 +40,15 @@ public class Game extends MouseInput implements Runnable {
     private Graphics graphics;//този койот ги изрисува
     private SpriteSheet spriteSheet;
     private BufferedImage bckg; // game background
+    private BufferedImage hlp; // help menu image
 
     private Menu menu;
     private Stone stone;
 
     public enum STATE {
         MENU,
-        GAME
+        GAME,
+        HELP
     }
 
     public static STATE State = STATE.MENU;
@@ -63,20 +65,21 @@ public class Game extends MouseInput implements Runnable {
         this.ih = new InputHandler(this.display.getCanvas());
         this.rabbit = new Player(120, 450, 0);
         this.bckg = Assets.background; // initialize game background image
+        this.hlp = Assets.help; // initialize halp menu image
 
         this.duckies = new ArrayList<>();
         for (int i = 0; i < random.nextInt(20); i++) {
-            addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 36));
+            addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41)); // for static duck (33,36)
         }
 
         this.eggs = new ArrayList<>();
         for (int i = 0; i < random.nextInt(20); i++) {
-            addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 20, 25));
+            addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29)); // for static egg (20,25)
         }
 
         this.stones = new ArrayList<>();
         for (int i = 0; i < random.nextInt(10); i++) {
-        addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 27, 17));}
+        addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27));}// for static stone (27,17)
 
         menu = new Menu();
         this.mi = new MouseInput(this.display.getCanvas());
@@ -167,6 +170,11 @@ public class Game extends MouseInput implements Runnable {
         this.graphics.clearRect(0, 0, this.width, this.height);
 
         this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
+
+        if (State == STATE.HELP) {
+            this.graphics.drawImage(this.hlp, 154, 104, 506, 328, null); // draw help menu
+
+        }
 
 
         if (State == STATE.GAME) {
