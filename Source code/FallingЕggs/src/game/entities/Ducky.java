@@ -25,6 +25,14 @@ public class Ducky extends Entity {
         this.random = new Random();
     }
 
+    public int getY() {
+        return this.y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void tick() {
         this.y += random.nextInt(10);
         if (this.y >= (Game.HEIGHT)) {
@@ -44,13 +52,5 @@ public class Ducky extends Entity {
 
     public static void addDucky(Ducky dc, ArrayList<Ducky> duckies) { //da se iznese w obshtiq klas
         duckies.add(dc);
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 }

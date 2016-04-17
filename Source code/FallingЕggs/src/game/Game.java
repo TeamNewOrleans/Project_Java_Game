@@ -8,6 +8,7 @@ import game.entities.Stone;
 import gfx.Assets;
 import gfx.SpriteSheet;
 import display.Menu;
+
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -75,7 +76,7 @@ public class Game extends MouseInput implements Runnable {
 
         this.stones = new ArrayList<>();
         for (int i = 0; i < random.nextInt(10); i++) {
-        Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
+            Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
         }// for static stone (27,17)
 
         menu = new Menu();
@@ -199,15 +200,6 @@ public class Game extends MouseInput implements Runnable {
         this.graphics.dispose();
         this.bufferStrategy.show();
     }
-
-    //public void addStone(Stone st) { //da se iznese w obshtiq klas
-      //  stones.add(st);
-  //  }
-
-
-
-
-
 
     @Override
     public void run() {
