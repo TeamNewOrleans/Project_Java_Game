@@ -25,6 +25,14 @@ public class Egg extends Entity {
         random = new Random();
     }
 
+    public int getY() {
+        return this.y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public void tick() {
         this.y += random.nextInt(10);
         if (this.y >= (Game.HEIGHT)) {
@@ -44,13 +52,5 @@ public class Egg extends Entity {
 
     public static void addEgg(Egg egg, ArrayList<Egg> eggs) {
         eggs.add(egg);
-    }
-
-    public int getY() {
-        return this.y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
     }
 }

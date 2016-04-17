@@ -24,6 +24,14 @@ public class Stone extends  Entity{
         this.random = new Random();
     }
 
+    public int getY(){
+        return this.y;
+    }
+
+    public void setY(int y){
+        this.y = y;
+    }
+
     public  void tick() {
         this.y += random.nextInt(10);
         if(y >= (Game.HEIGHT)){
@@ -45,12 +53,4 @@ public class Stone extends  Entity{
     public static void addStone(Stone st, ArrayList<Stone> stones) { //da se iznese w obshtiq klas
         stones.add(st);
     }
-
-   public int getY(){
-       return this.y;
-   }
-
-   public void setY(int y){
-       this.y = y;
-   }
 }
