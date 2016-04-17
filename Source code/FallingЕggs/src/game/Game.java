@@ -142,17 +142,18 @@ public class Game extends MouseInput implements Runnable {
                 }
             }
 
-            if (this.rabbit.hitPoints >= 50 || (stones.size() + eggs.size() + duckies.size()) == 0) {
+            if (this.rabbit.hitPoints >= 25 || (stones.size() + eggs.size() + duckies.size()) == 0) {
                 System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.rabbit.hitPoints);
-
-                this.stop();
-
+                State = STATE.MENU;
+                isRunning = false;
             } else if (this.rabbit.hitPoints < 0) {
                 System.out.printf("Sorry, all the eggs are broken!");
-                this.stop();
+                State = STATE.MENU;
+                isRunning = false;
             }
 
             if (isEsc) {
+                System.out.println("The Escape key was pressed");
                 System.exit(1);
             }
         }

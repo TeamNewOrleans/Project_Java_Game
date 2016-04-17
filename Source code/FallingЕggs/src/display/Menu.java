@@ -15,7 +15,7 @@ public class Menu {
     private BufferedImage menuBckg; // menu background image
 
     // menu location
-    int x = (WIDHT-100)/2;
+    int x = (WIDHT-170)/2;
     int y = 180;
 
     // menu size (according image size)

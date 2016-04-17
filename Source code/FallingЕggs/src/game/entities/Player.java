@@ -1,5 +1,6 @@
 package game.entities;
 
+import game.Game;
 import gfx.Assets;
 import gfx.SpriteSheet;
 
@@ -28,9 +29,15 @@ public class Player {
     public void tick(){
         if (isMovingRight){
             this.x += this.velocity;
+            if (this.x + 120 >= Game.WIDTH){
+                this.x -= this.velocity;
+            }
             row = 0;
         }else if (isMovingLeft){
             this.x -= this.velocity;
+            if (this.x <= 0){
+                this.x = 0;
+            }
             row = 1;
         } else {
             this.row = 0;
