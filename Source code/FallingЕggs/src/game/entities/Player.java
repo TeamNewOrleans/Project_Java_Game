@@ -7,12 +7,12 @@ import gfx.SpriteSheet;
 import java.awt.*;
 
 public class Player {
-    public int x, y, width, height,  velocity, hitPoints;
-    private SpriteSheet img;
-    public Rectangle boundingBox; //външната кутия на играча, дали се е ударил в нещо
-
+    public int x, y, width, height, velocity, hitPoints;
+    public Rectangle boundingBox;
     public static boolean isMovingLeft, isMovingRight;
-    private int colum = 0;
+
+    private SpriteSheet img;
+    private int column = 0;
     private int row = 0;
 
     public Player(int x, int y, int hitPoints) {
@@ -26,48 +26,47 @@ public class Player {
         this.boundingBox = new Rectangle(x, y, this.width, this.height);
     }
 
-    public void tick(){
-        if (isMovingRight){
+    public void tick() {
+        if (isMovingRight) {
             this.x += this.velocity;
-            if (this.x + 120 >= Game.WIDTH){
+            if (this.x + 120 >= Game.WIDTH) {
                 this.x -= this.velocity;
             }
+
             row = 0;
-        }else if (isMovingLeft){
+        } else if (isMovingLeft) {
             this.x -= this.velocity;
-            if (this.x <= 0){
+            if (this.x <= 0) {
                 this.x = 0;
             }
+
             row = 1;
         } else {
             this.row = 0;
-            this.colum = 0;
+            this.column = 0;
         }
 
+        this.column++;
+        this.column %= 8;
 
-        this.colum++;
-        this.colum %= 8; //за да се върнем на първата картинка
-        this.boundingBox.setBounds(this.x, this.y, this.width, this.height); //ъпдейдваме боиндинбокса
+        this.boundingBox.setBounds(this.x, this.y, this.width, this.height);
     }
 
-    public void render(Graphics gr){
-        gr.drawImage(this.img.crop(this.colum*this.width, this.row*this.height, this.width, this.height), this.x, this.y, null);
+    public void render(Graphics gr) {
+        gr.drawImage(this.img.crop(this.column * this.width, this.row * this.height, this.width, this.height), this.x, this.y, null);
     }
 
-    public boolean intersect(Rectangle boundingBox){
+    public boolean intersect(Rectangle boundingBox) {
         return this.boundingBox.contains(boundingBox) || boundingBox.contains(this.boundingBox);
     }
 
-    public void addDamega(int amount){
+    public void addDamega(int amount) {
         this.hitPoints += amount;
 
     }
 
-    public void takeDamega(int amount){
+    public void takeDamega(int amount) {
         this.hitPoints -= amount;
 
     }
-    //public void speedUp(){
-    //    this.velocity += 10;
-   // }
 }

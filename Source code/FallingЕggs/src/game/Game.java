@@ -8,7 +8,6 @@ import game.entities.Stone;
 import gfx.Assets;
 import gfx.SpriteSheet;
 import display.Menu;
-
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
@@ -18,32 +17,29 @@ import java.util.Random;
 public class Game extends MouseInput implements Runnable {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
+    public static boolean isRunning;
     public static final int MAX_X = 35;
+    public static boolean isEsc;
+    public static STATE State;
+
+    protected Player rabbit;
     private String name;
     private int width, height;
-
-
-    private Thread thread; //нишка
-    public static boolean isRunning;
-    public static boolean isEsc;
-    protected Player rabbit;
+    private Thread thread;
     private ArrayList<Egg> eggs;
     private ArrayList<Ducky> duckies;
     private ArrayList<Stone> stones;
-
-    Random random = new Random();
+    private Random random;
     private InputHandler ih;
     private MouseInput mi;
 
     private Display display;
-    private BufferStrategy bufferStrategy;   //начина по който ние контролираме обектите да се визуализират
-    private Graphics graphics;//този койот ги изрисува
+    private BufferStrategy bufferStrategy;
+    private Graphics graphics;
     private SpriteSheet spriteSheet;
-    private BufferedImage bckg; // game background
-    private BufferedImage hlp; // help menu image
-
+    private BufferedImage bckg;
+    private BufferedImage hlp;
     private Menu menu;
-    private Stone stone;
 
     public enum STATE {
         MENU,
@@ -51,12 +47,11 @@ public class Game extends MouseInput implements Runnable {
         HELP
     }
 
-    public static STATE State = STATE.MENU;
-
     public Game(String name, int width, int height) {
         this.name = name;
         this.width = width;
         this.height = height;
+        this.random = new Random();
     }
 
     public void init() {
@@ -64,29 +59,30 @@ public class Game extends MouseInput implements Runnable {
         this.display = new Display(this.name, this.width, this.height);
         this.ih = new InputHandler(this.display.getCanvas());
         this.rabbit = new Player(120, 450, 0);
-        this.bckg = Assets.background; // initialize game background image
-        this.hlp = Assets.help; // initialize halp menu image
+        this.bckg = Assets.background;
+        this.hlp = Assets.help;
 
+        this.State = STATE.MENU;
         this.duckies = new ArrayList<>();
         for (int i = 0; i < random.nextInt(20); i++) {
-            addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41)); // for static duck (33,36)
+            Ducky.addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41), this.duckies); // for static duck (33,36)
         }
 
         this.eggs = new ArrayList<>();
         for (int i = 0; i < random.nextInt(20); i++) {
-            addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29)); // for static egg (20,25)
+            Egg.addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29), this.eggs); // for static egg (20,25)
         }
 
         this.stones = new ArrayList<>();
         for (int i = 0; i < random.nextInt(10); i++) {
-        addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27));}// for static stone (27,17)
+        Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
+        }// for static stone (27,17)
 
         menu = new Menu();
         this.mi = new MouseInput(this.display.getCanvas());
-
     }
 
-    public void tick() { //визуализираме нещата
+    public void tick() {
         if (State == STATE.GAME) {
             this.rabbit.tick();
 
@@ -127,7 +123,6 @@ public class Game extends MouseInput implements Runnable {
                 }
             }
 
-
             for (int i = 0; i < duckies.size(); i++) {
                 if (this.duckies.get(i) != null && this.rabbit.boundingBox.intersects(this.duckies.get(i).boundingBox)) {
                     this.rabbit.addDamega(3);
@@ -159,10 +154,10 @@ public class Game extends MouseInput implements Runnable {
         }
     }
 
-    protected void render() { //визуализираме нещата
+    protected void render() {
         this.bufferStrategy = this.display.getCanvas().getBufferStrategy();
         if (this.bufferStrategy == null) {
-            this.display.getCanvas().createBufferStrategy(2); //два буфера за работа
+            this.display.getCanvas().createBufferStrategy(2);
             this.bufferStrategy = this.display.getCanvas().getBufferStrategy();
         }
 
@@ -174,12 +169,9 @@ public class Game extends MouseInput implements Runnable {
 
         if (State == STATE.HELP) {
             this.graphics.drawImage(this.hlp, 154, 104, 506, 328, null); // draw help menu
-
         }
 
-
         if (State == STATE.GAME) {
-
             this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
 
             this.rabbit.render(this.graphics);
@@ -208,26 +200,21 @@ public class Game extends MouseInput implements Runnable {
         this.bufferStrategy.show();
     }
 
-    public void addStone(Stone st) { //da se iznese w obshtiq klas
-        stones.add(st);
-    }
+    //public void addStone(Stone st) { //da se iznese w obshtiq klas
+      //  stones.add(st);
+  //  }
 
-    public void addEgg(Egg egg) { //da se iznese w obshtiq klas
-        eggs.add(egg);
-    }
 
-    public void addDucky(Ducky dc) { //da se iznese w obshtiq klas
-        duckies.add(dc);
-    }
+
+
 
 
     @Override
     public void run() {
-        this.init(); //инизиализация
+        this.init();
+        int fps = 15;
 
-        int fps = 15;//60 фрейме се преизчисляват и пренарисъват за секунда, 60 за секунда// change to 15 fps to be slower
-
-        double timePerFrame = 1_000_000_000 / fps; //колко време трябва да се изчака на всяко визуализиране
+        double timePerFrame = 1_000_000_000 / fps;
         double delta = 0;
         long now;
         long lastTimeTicked = System.nanoTime();
@@ -251,7 +238,7 @@ public class Game extends MouseInput implements Runnable {
             }
         }
 
-        this.stop(); //за да спрем нишката
+        this.stop();
     }
 
     public synchronized void start() {

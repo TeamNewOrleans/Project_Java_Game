@@ -20,25 +20,19 @@ public class MouseInput implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        /* public Rectangle playButton = new Rectangle((WIDHT-120)/2, 180, 100, 50);
-    public Rectangle helpButton = new Rectangle((WIDHT-120)/2, 280, 100, 50);
-    public Rectangle exitButton = new Rectangle((WIDHT-120)/2, 380, 100, 50);*/
-
         int mx = e.getX();
-        int my = e .getY();
+        int my = e.getY();
 
-        // Start Game
-        if (mx >= (400-74) && mx <= (400+74)&& Game.State == Game.STATE.MENU){
-            if (my >= 180+40 && my <= 180+68){
-                //Pressed Play Button
+        //Pressed Play Button
+        if (mx >= (400 - 74) && mx <= (400 + 74) && Game.State == Game.STATE.MENU) {
+            if (my >= 180 + 40 && my <= 180 + 68) {
                 Game.State = Game.STATE.GAME;
             }
         }
 
         // Go to Help
-        if (mx >= 400-74 && mx <= 400+74 && Game.State == Game.STATE.MENU){
-            if (my >= 180+90 && my <= 180+118){
-                //Pressed Help Button
+        if (mx >= 400 - 74 && mx <= 400 + 74 && Game.State == Game.STATE.MENU) {
+            if (my >= 180 + 90 && my <= 180 + 118) {
                 Game.State = Game.STATE.HELP;
 
             }
@@ -46,23 +40,19 @@ public class MouseInput implements MouseListener {
         }
 
         // Back to Menu from Help
-        if (mx >= 160 && mx <= 400 && Game.State == Game.STATE.HELP){
-            if (my >= 110 && my <= 200){
-                //Pressed Back to Menu
+        if (mx >= 160 && mx <= 400 && Game.State == Game.STATE.HELP) {
+            if (my >= 110 && my <= 200) {
                 Game.State = Game.STATE.MENU;
 
             }
         }
 
-
         // Exit and Close
-        if (mx >= 400-74 && mx <= 400+74 && Game.State == Game.STATE.MENU){
-            if (my >= 180+140 && my <= 180+168){
-                //Pressed Exit Button
+        if (mx >= 400 - 74 && mx <= 400 + 74 && Game.State == Game.STATE.MENU) {
+            if (my >= 180 + 140 && my <= 180 + 168) {
                 System.exit(1);
             }
         }
-
     }
 
     @Override
