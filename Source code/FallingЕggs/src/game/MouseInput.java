@@ -33,14 +33,14 @@ public class MouseInput implements MouseListener {
             }
         }
 
-        if (mx >= 400-74 && mx <= 400+74){
+        if (mx >= 400-74 && mx <= 400+74 && Game.State == Game.STATE.MENU){
             if (my >= 180+90 && my <= 180+118){
                 //Pressed Help Button
 
             }
         }
 
-        if (mx >= 400-74 && mx <= 400+74){
+        if (mx >= 400-74 && mx <= 400+74 && Game.State == Game.STATE.MENU){
             if (my >= 180+140 && my <= 180+168){
                 //Pressed Exit Button
                 System.exit(1);

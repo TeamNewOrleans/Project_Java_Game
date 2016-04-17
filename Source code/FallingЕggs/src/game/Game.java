@@ -24,7 +24,7 @@ public class Game extends MouseInput implements Runnable {
 
 
     private Thread thread; //нишка
-    private boolean isRunning;
+    public static boolean isRunning;
     public static boolean isEsc;
     protected Player rabbit;
     private ArrayList<Egg> eggs;
