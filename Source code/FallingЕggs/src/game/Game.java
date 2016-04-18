@@ -42,10 +42,15 @@ public class Game extends MouseInput implements Runnable {
     private BufferedImage hlp;
     private Menu menu;
 
+    private BufferedImage background1; // end State
+
+
     public enum STATE {
         MENU,
         GAME,
-        HELP
+        HELP,
+        ENDWIN,
+        ENDLOST
     }
 
     public Game(String name, int width, int height) {
@@ -139,12 +144,12 @@ public class Game extends MouseInput implements Runnable {
             }
 
             if (this.rabbit.hitPoints >= 25 || (stones.size() + eggs.size() + duckies.size()) == 0) {
-                System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.rabbit.hitPoints);
-                State = STATE.MENU;
+               // System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.rabbit.hitPoints);
+                State = STATE.ENDWIN;
                 isRunning = false;
             } else if (this.rabbit.hitPoints < 0) {
-                System.out.printf("Sorry, all the eggs are broken!");
-                State = STATE.MENU;
+               // System.out.printf("Sorry, all the eggs are broken!");
+                State = STATE.ENDLOST;
                 isRunning = false;
             }
 
@@ -167,6 +172,27 @@ public class Game extends MouseInput implements Runnable {
         this.graphics.clearRect(0, 0, this.width, this.height);
 
         this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
+
+        this.graphics.drawRect(326, 320, 120, 28); //quit na end state
+        String text = "Quit";
+        this.graphics.setColor(Color.yellow);
+        this.graphics.setFont(new Font("arial", Font.ITALIC, 30));
+        this.graphics.drawString(text, 350, 345);
+        if (State == STATE.ENDWIN) {
+            this.graphics.drawImage(this.background1, 154, 104, 506, 328, null); // draw end state
+            String textWin = "\nCongratulation!\nYou can going home with " + this.rabbit.hitPoints + " eggs!" ;
+            this.graphics.setColor(Color.pink);
+            this.graphics.setFont(new Font("arial", Font.BOLD, 30));
+            this.graphics.drawString(textWin, 50, 200);
+        }
+
+        if (State == STATE.ENDLOST) {
+            this.graphics.drawImage(this.background1, 154, 104, 506, 328, null); //draw end state
+            String textQuit = "Sorry, all the eggs are broken!";
+            this.graphics.setColor(Color.pink);
+            this.graphics.setFont(new Font("arial", Font.BOLD, 30));
+            this.graphics.drawString(textQuit, 200, 200);
+        }
 
         if (State == STATE.HELP) {
             this.graphics.drawImage(this.hlp, 154, 104, 506, 328, null); // draw help menu
@@ -193,6 +219,14 @@ public class Game extends MouseInput implements Runnable {
                     this.stones.get(i).render(graphics);
                 }
             }
+
+            //proba
+            String textPlay = "Your eggs are: " + this.rabbit.hitPoints;
+            this.graphics.setColor(Color.yellow);
+            this.graphics.setFont(new Font("arial", Font.ITALIC, 30));
+            this.graphics.drawString(textPlay, 10, 30);
+            //end proba
+
         } else if (State == STATE.MENU) {
             menu.render(graphics);
         }
@@ -215,7 +249,7 @@ public class Game extends MouseInput implements Runnable {
             now = System.nanoTime();
             delta += (now - lastTimeTicked) / timePerFrame;
             lastTimeTicked = now;
-            System.out.printf("Your eggs are: %d\n", this.rabbit.hitPoints);
+            //System.out.printf("Your eggs are: %d\n", this.rabbit.hitPoints);
 
             if (delta >= 1) {
                 try {

@@ -48,7 +48,9 @@ public class MouseInput implements MouseListener {
         }
 
         // Exit and Close
-        if (mx >= 400 - 74 && mx <= 400 + 74 && Game.State == Game.STATE.MENU) {
+        if (mx >= 400 - 74 && mx <= 400 + 74 && (Game.State == Game.STATE.MENU ||
+                                                 Game.State == Game.STATE.ENDLOST || //end State
+                                                 Game.State == Game.STATE.ENDWIN)) {
             if (my >= 180 + 140 && my <= 180 + 168) {
                 System.exit(1);
             }

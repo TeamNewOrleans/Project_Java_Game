@@ -15,6 +15,8 @@ public class Assets {
     public static BufferedImage menuBackground;
     public static BufferedImage help; // image about help
 
+    public static BufferedImage background1; //image for end
+
     public static void init() {
         background = ImageLoader.loadImage("/game_bckg.png"); // image for game background
         menuBackground = ImageLoader.loadImage("/menu_bckg.png"); // image for menu background
@@ -26,5 +28,7 @@ public class Assets {
         stone = ImageLoader.loadImage("/stone.png"); // image for falling stones
         menuButtons = ImageLoader.loadImage("/menu.png"); // Menu image with buttons
         help = ImageLoader.loadImage("/help.png"); // image for help
+
+        background1 = ImageLoader.loadImage("/game_bckg.png");  //image for end
     }
 }
