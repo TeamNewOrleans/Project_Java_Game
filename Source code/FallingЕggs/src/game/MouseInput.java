@@ -28,7 +28,7 @@ public class MouseInput implements MouseListener {
         //Pressed Play Button
         if (mx >= (400 - 74) && mx <= (400 + 74) && Game.State == Game.STATE.MENU) {
             if (my >= 180 + 40 && my <= 180 + 68) {
-                Game.State = Game.STATE.GAME;
+                Game.State = Game.STATE.RELOAD;
             }
         }
 

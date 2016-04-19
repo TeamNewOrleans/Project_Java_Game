@@ -1,5 +1,6 @@
 package game;
 
+import com.sun.tools.javadoc.Start;
 import display.Display;
 import game.entities.Ducky;
 import game.entities.Egg;
@@ -16,43 +17,53 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Game extends MouseInput implements Runnable {
-    public static final int WIDTH = 800;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 800; // width of Canvas size
+    public static final int HEIGHT = 600; // height of Canvas size
+    public static final int MAX_X = 35; // offset from end of the Canvas (in pixels)
+    public static final int maxPoints = 25; // maximum point to win the game
+
     public static boolean isRunning;
-    public static final int MAX_X = 35;
     public static boolean isEsc;
+
     public static STATE State;
 
     protected Player rabbit;
     private String name;
     private int width, height;
     private Thread thread;
+
     private ArrayList<Egg> eggs;
     private ArrayList<Ducky> duckies;
     private ArrayList<Stone> stones;
+
     private Random random;
+
     private InputHandler ih;
     private MouseInput mi;
 
     private Display display;
-    private BufferStrategy bufferStrategy;
+
     private Graphics graphics;
-    private SpriteSheet spriteSheet;
+
+    private BufferStrategy bufferStrategy;
     private BufferedImage bckg;
     private BufferedImage hlp;
+    private BufferedImage gameWinImg; // image about end State winner
+    private BufferedImage gameLostImg; // image about end State looser
+
     private Menu menu;
 
-    private BufferedImage gameWinImg; // end State winner
-    private BufferedImage gameLostImg; // end State looser
 
 
-    public enum STATE {
+
+    public static enum STATE {
         MENU, //state to open main menu
         GAME, // state to start game
         HELP, // state to open help
         ENDWIN, // state to finish as winner
         ENDLOST, // state to finish as loser
-        PAUSE // state to pause the game
+        PAUSE, // state to pause the game
+        RELOAD // state to reload game after finishing
     }
 
     public Game(String name, int width, int height) {
@@ -60,40 +71,53 @@ public class Game extends MouseInput implements Runnable {
         this.width = width;
         this.height = height;
         this.random = new Random();
+        this.State = STATE.MENU; // set default State to STATE.MENU
     }
 
+    //initialize Display
     public void init() {
         Assets.init();
         this.display = new Display(this.name, this.width, this.height);
         this.ih = new InputHandler(this.display.getCanvas());
-        this.rabbit = new Player(120, 450, 0);
-        this.bckg = Assets.background;
-        this.hlp = Assets.help;
-        this.gameWinImg = Assets.gameOverWin;
-        this.gameLostImg = Assets.gameOverLost;
-
-        this.State = STATE.MENU;
-        this.duckies = new ArrayList<>();
-        for (int i = 0; i < random.nextInt(20); i++) {
-            Ducky.addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41), this.duckies); // for static duck (33,36)
-        }
-
-        this.eggs = new ArrayList<>();
-        for (int i = 0; i < random.nextInt(20); i++) {
-            Egg.addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29), this.eggs); // for static egg (20,25)
-        }
-
-        this.stones = new ArrayList<>();
-        for (int i = 0; i < random.nextInt(10); i++) {
-            Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
-        }// for static stone (27,17)
-
-        menu = new Menu();
         this.mi = new MouseInput(this.display.getCanvas());
+
+        reload();
+    }
+    //initialize Display players, background and entities
+    public void reload(){
+        this.bckg = Assets.background; // game background
+        this.hlp = Assets.help; // help menu
+        this.gameWinImg = Assets.gameOverWin; // image when finished as winner
+        this.gameLostImg = Assets.gameOverLost; // image when finished as looser
+
+        this.rabbit = new Player(120, 450, 0); // position of Rabbit
+
+        menu = new Menu(); // call main menu
+
+        //create list with falling chicks
+        this.duckies = new ArrayList<>();
+            for (int i = 0; i < random.nextInt(20); i++) {
+                Ducky.addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41), this.duckies);
+            }
+
+        //create list with falling eggs
+        this.eggs = new ArrayList<>();
+            for (int i = 0; i < random.nextInt(20); i++) {
+                Egg.addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29), this.eggs); // for static egg (20,25)
+            }
+
+        //create list with falling stones
+        this.stones = new ArrayList<>();
+            for (int i = 0; i < random.nextInt(20); i++) {
+                Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
+            }
     }
 
+    //start game action
     public void tick() {
+
         if (State == STATE.GAME) {
+
             this.rabbit.tick();
 
             for (int i = 0; i < eggs.size(); i++) {
@@ -147,18 +171,16 @@ public class Game extends MouseInput implements Runnable {
                 }
             }
 
-            if (this.rabbit.hitPoints >= 25 || (stones.size() + eggs.size() + duckies.size()) == 0) {
-               // System.out.printf("\nCongratulation!\nYou can going home with %d eggs!", this.rabbit.hitPoints);
+            //state when the player finished the game as winner
+            if (this.rabbit.hitPoints >= maxPoints || (eggs.size() + duckies.size()) == 0) {
                 State = STATE.ENDWIN;
-                isRunning = false;
-            } else if (this.rabbit.hitPoints < 0) {
-               // System.out.printf("Sorry, all the eggs are broken!");
-                State = STATE.ENDLOST;
-                isRunning = false;
-            }
 
+            } else if (this.rabbit.hitPoints < 0) { //state when the player finished the game as Looser
+                State = STATE.ENDLOST;
+                }
+
+           // exit from the game if the Esc button is pressed
             if (isEsc) {
-                System.out.println("The Escape key was pressed");
                 System.exit(1);
             }
         }
@@ -174,40 +196,7 @@ public class Game extends MouseInput implements Runnable {
         this.graphics = this.bufferStrategy.getDrawGraphics();
         this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
 
-        //show to user that the game is in Pause state
-        if (State == STATE.PAUSE) {
-            String textPause = "PAUSE";
-            String textREsume = "Press \"P\" to resume. ";
-            this.graphics.setColor(Color.white);
-            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
-            this.graphics.drawString(textPause, 350, 250);
-            this.graphics.setFont(new Font("Comic Sans MS", Font.ITALIC, 20));
-            this.graphics.drawString(textREsume, 310, 280);
-        }
-
-
-        // show to user that the game is End as winner
-        if (State == STATE.ENDWIN) {
-            this.graphics.drawImage(this.gameWinImg, 154, 104, 506, 328, null); // draw end state
-            String textWin = this.rabbit.hitPoints + " points" ;
-            this.graphics.setColor(Color.white);
-            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
-            this.graphics.drawString(textWin, 353, 310);
-            System.out.println("state" + State);
-        }
-
-        // show to user that the game is End as loser
-        if (State == STATE.ENDLOST) {
-            this.graphics.drawImage(this.gameLostImg, 154, 104, 506, 328, null); //draw end state as Looser
-
-
-            System.out.println("state" + State);
-        }
-
-        if (State == STATE.HELP) {
-            this.graphics.drawImage(this.hlp, 154, 104, 506, 328, null); // draw help menu
-        }
-
+        // render all entities which are in State Game
         if (State == STATE.GAME) {
             this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
 
@@ -230,27 +219,63 @@ public class Game extends MouseInput implements Runnable {
                 }
             }
 
-            //proba
+            // Show the live score on top left corner
             String textPlay = "Score: " + this.rabbit.hitPoints;
             this.graphics.setColor(Color.white);
             this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
             this.graphics.drawString(textPlay, 10, 30);
-            //end proba
 
+            // show the main menu on the screen
         } else if (State == STATE.MENU) {
             menu.render(graphics);
+
+        }
+
+        //show to user that the game is in Pause state
+        if (State == STATE.PAUSE) {
+            String textPause = "PAUSE";
+            String textREsume = "Press \"P\" to resume. ";
+            this.graphics.setColor(Color.white);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+            this.graphics.drawString(textPause, 350, 250);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.ITALIC, 20));
+            this.graphics.drawString(textREsume, 310, 280);
+        }
+
+
+        // show to user that the game is End as winner
+        if (State == STATE.ENDWIN) {
+            this.graphics.drawImage(this.gameWinImg, 154, 104, 506, 328, null); // draw end state
+            String textWin = this.rabbit.hitPoints + " points" ;
+            this.graphics.setColor(Color.white);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
+            this.graphics.drawString(textWin, 353, 310);
+
+        }
+
+        // show to user that the game is End as loser
+        if (State == STATE.ENDLOST) {
+            this.graphics.drawImage(this.gameLostImg, 154, 104, 506, 328, null); //draw end state as Looser
+        }
+
+        // show the Help menu
+        if (State == STATE.HELP) {
+            this.graphics.drawImage(this.hlp, 154, 104, 506, 328, null); // draw help menu
         }
 
         this.graphics.dispose();
         this.bufferStrategy.show();
 
-        if (State == STATE.PAUSE) {
-            return;
+        // State where user can start new game after Game over and back to menu
+        if (State == STATE.RELOAD) {
+            reload();
+            State = STATE.GAME;
         }
     }
 
     @Override
     public void run() {
+
         this.init();
         int fps = 15;
 
@@ -263,7 +288,7 @@ public class Game extends MouseInput implements Runnable {
             now = System.nanoTime();
             delta += (now - lastTimeTicked) / timePerFrame;
             lastTimeTicked = now;
-            //System.out.printf("Your eggs are: %d\n", this.rabbit.hitPoints);
+
 
             if (delta >= 1) {
                 try {
@@ -290,6 +315,7 @@ public class Game extends MouseInput implements Runnable {
     public synchronized void stop() {
         try {
             this.isRunning = false;
+
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
