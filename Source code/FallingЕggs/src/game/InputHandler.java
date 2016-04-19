@@ -48,5 +48,11 @@ public class InputHandler implements KeyListener {
             Player.isMovingRight = false;
             Player.isMovingLeft = false;
         }
+
+        if (code == KeyEvent.VK_P && Game.State == Game.STATE.GAME) {
+            Game.State = Game.STATE.PAUSE;
+        } else if (code == KeyEvent.VK_P && Game.State == Game.STATE.PAUSE) {
+            Game.State = Game.STATE.GAME;
+        }
     }
 }

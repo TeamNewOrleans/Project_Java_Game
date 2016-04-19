@@ -42,15 +42,17 @@ public class Game extends MouseInput implements Runnable {
     private BufferedImage hlp;
     private Menu menu;
 
-    private BufferedImage background1; // end State
+    private BufferedImage gameWinImg; // end State winner
+    private BufferedImage gameLostImg; // end State looser
 
 
     public enum STATE {
-        MENU,
-        GAME,
-        HELP,
-        ENDWIN,
-        ENDLOST
+        MENU, //state to open main menu
+        GAME, // state to start game
+        HELP, // state to open help
+        ENDWIN, // state to finish as winner
+        ENDLOST, // state to finish as loser
+        PAUSE // state to pause the game
     }
 
     public Game(String name, int width, int height) {
@@ -67,6 +69,8 @@ public class Game extends MouseInput implements Runnable {
         this.rabbit = new Player(120, 450, 0);
         this.bckg = Assets.background;
         this.hlp = Assets.help;
+        this.gameWinImg = Assets.gameOverWin;
+        this.gameLostImg = Assets.gameOverLost;
 
         this.State = STATE.MENU;
         this.duckies = new ArrayList<>();
@@ -159,7 +163,7 @@ public class Game extends MouseInput implements Runnable {
             }
         }
     }
-
+        // start to render the game images
     protected void render() {
         this.bufferStrategy = this.display.getCanvas().getBufferStrategy();
         if (this.bufferStrategy == null) {
@@ -168,30 +172,36 @@ public class Game extends MouseInput implements Runnable {
         }
 
         this.graphics = this.bufferStrategy.getDrawGraphics();
-
-        this.graphics.clearRect(0, 0, this.width, this.height);
-
         this.graphics.drawImage(this.bckg, 0, 0, 800, 600, null); // draw game background
 
-        this.graphics.drawRect(326, 320, 120, 28); //quit na end state
-        String text = "Quit";
-        this.graphics.setColor(Color.yellow);
-        this.graphics.setFont(new Font("arial", Font.ITALIC, 30));
-        this.graphics.drawString(text, 350, 345);
-        if (State == STATE.ENDWIN) {
-            this.graphics.drawImage(this.background1, 154, 104, 506, 328, null); // draw end state
-            String textWin = "\nCongratulation!\nYou can going home with " + this.rabbit.hitPoints + " eggs!" ;
-            this.graphics.setColor(Color.pink);
-            this.graphics.setFont(new Font("arial", Font.BOLD, 30));
-            this.graphics.drawString(textWin, 50, 200);
+        //show to user that the game is in Pause state
+        if (State == STATE.PAUSE) {
+            String textPause = "PAUSE";
+            String textREsume = "Press \"P\" to resume. ";
+            this.graphics.setColor(Color.white);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
+            this.graphics.drawString(textPause, 350, 250);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.ITALIC, 20));
+            this.graphics.drawString(textREsume, 310, 280);
         }
 
+
+        // show to user that the game is End as winner
+        if (State == STATE.ENDWIN) {
+            this.graphics.drawImage(this.gameWinImg, 154, 104, 506, 328, null); // draw end state
+            String textWin = this.rabbit.hitPoints + " points" ;
+            this.graphics.setColor(Color.white);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
+            this.graphics.drawString(textWin, 353, 310);
+            System.out.println("state" + State);
+        }
+
+        // show to user that the game is End as loser
         if (State == STATE.ENDLOST) {
-            this.graphics.drawImage(this.background1, 154, 104, 506, 328, null); //draw end state
-            String textQuit = "Sorry, all the eggs are broken!";
-            this.graphics.setColor(Color.pink);
-            this.graphics.setFont(new Font("arial", Font.BOLD, 30));
-            this.graphics.drawString(textQuit, 200, 200);
+            this.graphics.drawImage(this.gameLostImg, 154, 104, 506, 328, null); //draw end state as Looser
+
+
+            System.out.println("state" + State);
         }
 
         if (State == STATE.HELP) {
@@ -221,9 +231,9 @@ public class Game extends MouseInput implements Runnable {
             }
 
             //proba
-            String textPlay = "Your eggs are: " + this.rabbit.hitPoints;
-            this.graphics.setColor(Color.yellow);
-            this.graphics.setFont(new Font("arial", Font.ITALIC, 30));
+            String textPlay = "Score: " + this.rabbit.hitPoints;
+            this.graphics.setColor(Color.white);
+            this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
             this.graphics.drawString(textPlay, 10, 30);
             //end proba
 
@@ -233,6 +243,10 @@ public class Game extends MouseInput implements Runnable {
 
         this.graphics.dispose();
         this.bufferStrategy.show();
+
+        if (State == STATE.PAUSE) {
+            return;
+        }
     }
 
     @Override

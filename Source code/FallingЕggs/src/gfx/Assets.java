@@ -3,19 +3,18 @@ package gfx;
 import java.awt.image.BufferedImage;
 
 public class Assets {
-    public static BufferedImage background;
-    public static SpriteSheet player;
-    public static SpriteSheet eggSheet; // egg sprite sheet
-    public static SpriteSheet stoneSheet; // stone sprite sheet
-    public static SpriteSheet chickSheet; // chick sprite sheet
 
+    public static SpriteSheet player; // rabbit sprite sheet
+    public static SpriteSheet eggSheet; // falling egg sprite sheet
+    public static SpriteSheet stoneSheet; // falling stone sprite sheet
+    public static SpriteSheet chickSheet; // falling chick sprite sheet
+
+    public static BufferedImage background; // background on Game state
     public static BufferedImage menuButtons; // about menu image with buttons
-    public static BufferedImage ducky;
-    public static BufferedImage stone;
-    public static BufferedImage menuBackground;
+    public static BufferedImage menuBackground; // background on Menu state
     public static BufferedImage help; // image about help
-
-    public static BufferedImage background1; //image for end
+    public static BufferedImage gameOverWin; //image for end the game - Winner
+    public static BufferedImage gameOverLost; //image for end the game - Looser
 
     public static void init() {
         background = ImageLoader.loadImage("/game_bckg.png"); // image for game background
@@ -24,11 +23,10 @@ public class Assets {
         eggSheet = new SpriteSheet(ImageLoader.loadImage(("/sprite_sheet.png"))); // image for rounded eggs
         stoneSheet = new SpriteSheet(ImageLoader.loadImage(("/sprite_sheet.png"))); // image for rounded stones
         chickSheet = new SpriteSheet(ImageLoader.loadImage(("/sprite_sheet.png"))); // image for flying chicks
-        ducky = ImageLoader.loadImage("/chicken.png");// image for falling chicken
-        stone = ImageLoader.loadImage("/stone.png"); // image for falling stones
         menuButtons = ImageLoader.loadImage("/menu.png"); // Menu image with buttons
         help = ImageLoader.loadImage("/help.png"); // image for help
+        gameOverWin = ImageLoader.loadImage("/game_over_win.png");  //image for end of the game
+        gameOverLost = ImageLoader.loadImage("/game_over_lost.png");  //image for end of the game
 
-        background1 = ImageLoader.loadImage("/game_bckg.png");  //image for end
     }
 }
