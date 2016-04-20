@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Egg extends Entity {
+    public Rectangle boundingBox;
     private int x, y, width, height;
     private int column = 0;
-    public Rectangle boundingBox;
     private SpriteSheet roundEgg; //for rounded egg
     private Random random;
+    private int maxRandomNumber = 10;
+    private int cropY = 272;
 
     public Egg(int x, int y, int width, int height) {
+        super(x, y, width, height);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -25,16 +28,8 @@ public class Egg extends Entity {
         random = new Random();
     }
 
-    public int getY() {
-        return this.y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public void tick() {
-        this.y += random.nextInt(10);
+        this.y += random.nextInt(maxRandomNumber);
         if (this.y >= (Game.HEIGHT)) {
             this.y = 0;
             this.x = random.nextInt(Game.WIDTH - Game.MAX_X);
@@ -47,7 +42,7 @@ public class Egg extends Entity {
     }
 
     public void render(Graphics g) {
-        g.drawImage(this.roundEgg.crop(this.column * this.width, 272, this.width, this.height), this.x, this.y, null); // draw the rounded eggs
+        g.drawImage(this.roundEgg.crop(this.column * this.width, cropY, this.width, this.height), this.x, this.y, null); // draw the rounded eggs
     }
 
     public static void addEgg(Egg egg, ArrayList<Egg> eggs) {

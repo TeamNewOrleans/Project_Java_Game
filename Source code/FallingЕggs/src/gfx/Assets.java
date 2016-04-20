@@ -1,5 +1,7 @@
 package gfx;
 
+import interfaces.Initializingable;
+
 import java.awt.image.BufferedImage;
 
 public class Assets {
@@ -27,6 +29,5 @@ public class Assets {
         help = ImageLoader.loadImage("/help.png"); // image for help
         gameOverWin = ImageLoader.loadImage("/game_over_win.png");  //image for end of the game
         gameOverLost = ImageLoader.loadImage("/game_over_lost.png");  //image for end of the game
-
     }
 }

@@ -23,8 +23,6 @@ public class MouseInput implements MouseListener {
         int mx = e.getX();
         int my = e.getY();
 
-
-
         //Pressed Play Button
         if (mx >= (400 - 74) && mx <= (400 + 74) && Game.State == Game.STATE.MENU) {
             if (my >= 180 + 40 && my <= 180 + 68) {
@@ -36,31 +34,23 @@ public class MouseInput implements MouseListener {
         if (mx >= 400 - 74 && mx <= 400 + 74 && Game.State == Game.STATE.MENU) {
             if (my >= 180 + 90 && my <= 180 + 118) {
                 Game.State = Game.STATE.HELP;
-
             }
-
         }
 
         // Back to Menu from Help
         if (mx >= 160 && mx <= 400 && Game.State == Game.STATE.HELP) {
             if (my >= 110 && my <= 200) {
                 Game.State = Game.STATE.MENU;
-
             }
         }
 
 // Back to Menu from End states
-        if (mx >= 358 && mx <= 475 && (Game.State == Game.STATE.ENDWIN || Game.State == Game.STATE.ENDLOST )) {
+        if (mx >= 358 && mx <= 475 && (Game.State == Game.STATE.ENDWIN || Game.State == Game.STATE.ENDLOST)) {
             if (my >= 380 && my <= 430) {
                 Game.State = Game.STATE.MENU;
 
             }
         }
-
-
-
-
-
 
         // Exit and Close
         if (mx >= 400 - 74 && mx <= 400 + 74 && Game.State == Game.STATE.MENU) {

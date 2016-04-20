@@ -9,13 +9,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Ducky extends Entity {
+    public Rectangle boundingBox;
     private int x, y, width, height;
     private int column = 0;
-    public Rectangle boundingBox;
     private SpriteSheet flyingChick; //for flying chick
     private Random random;
+    private int maxRandomNumber = 10;
+    private int cropY = 348;
 
     public Ducky(int x, int y, int width, int height) {
+        super(x, y, width, height);
         this.x = x;
         this.y = y;
         this.width = width;
@@ -25,16 +28,8 @@ public class Ducky extends Entity {
         this.random = new Random();
     }
 
-    public int getY() {
-        return this.y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public void tick() {
-        this.y += random.nextInt(10);
+        this.y += random.nextInt(maxRandomNumber);
         if (this.y >= (Game.HEIGHT)) {
             this.y = 0;
             this.x = random.nextInt(Game.WIDTH - Game.MAX_X);
@@ -47,7 +42,7 @@ public class Ducky extends Entity {
     }
 
     public void render(Graphics g) {
-        g.drawImage(this.flyingChick.crop(this.column * this.width, 348, this.width, this.height), this.x, this.y, null);
+        g.drawImage(this.flyingChick.crop(this.column * this.width, cropY, this.width, this.height), this.x, this.y, null);
     }
 
     public static void addDucky(Ducky dc, ArrayList<Ducky> duckies) { //da se iznese w obshtiq klas

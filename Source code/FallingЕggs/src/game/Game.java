@@ -1,14 +1,15 @@
 package game;
 
-import com.sun.tools.javadoc.Start;
+import interfaces.Initializingable;
+import interfaces.Reloadable;
+import interfaces.Tickable;
 import display.Display;
+import display.Menu;
 import game.entities.Ducky;
 import game.entities.Egg;
 import game.entities.Player;
 import game.entities.Stone;
 import gfx.Assets;
-import gfx.SpriteSheet;
-import display.Menu;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
@@ -16,15 +17,13 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Game extends MouseInput implements Runnable {
+public class Game extends MouseInput implements Runnable, Tickable, Initializingable, Reloadable {
     public static final int WIDTH = 800; // width of Canvas size
     public static final int HEIGHT = 600; // height of Canvas size
     public static final int MAX_X = 35; // offset from end of the Canvas (in pixels)
     public static final int maxPoints = 25; // maximum point to win the game
-
     public static boolean isRunning;
     public static boolean isEsc;
-
     public static STATE State;
 
     protected Player rabbit;
@@ -40,9 +39,7 @@ public class Game extends MouseInput implements Runnable {
 
     private InputHandler ih;
     private MouseInput mi;
-
     private Display display;
-
     private Graphics graphics;
 
     private BufferStrategy bufferStrategy;
@@ -53,10 +50,11 @@ public class Game extends MouseInput implements Runnable {
 
     private Menu menu;
 
+    private int addEggsDamge = 1;
+    private int addDuckyDamge = 3;
+    private int takeStoneDamge = 3;
 
-
-
-    public static enum STATE {
+    public enum STATE {
         MENU, //state to open main menu
         GAME, // state to start game
         HELP, // state to open help
@@ -83,8 +81,9 @@ public class Game extends MouseInput implements Runnable {
 
         reload();
     }
+
     //initialize Display players, background and entities
-    public void reload(){
+    public void reload() {
         this.bckg = Assets.background; // game background
         this.hlp = Assets.help; // help menu
         this.gameWinImg = Assets.gameOverWin; // image when finished as winner
@@ -96,28 +95,26 @@ public class Game extends MouseInput implements Runnable {
 
         //create list with falling chicks
         this.duckies = new ArrayList<>();
-            for (int i = 0; i < random.nextInt(20); i++) {
-                Ducky.addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41), this.duckies);
-            }
+        for (int i = 0; i < random.nextInt(20); i++) {
+            Ducky.addDucky(new Ducky(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 44, 41), this.duckies);
+        }
 
         //create list with falling eggs
         this.eggs = new ArrayList<>();
-            for (int i = 0; i < random.nextInt(20); i++) {
-                Egg.addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29), this.eggs); // for static egg (20,25)
-            }
+        for (int i = 0; i < random.nextInt(20); i++) {
+            Egg.addEgg(new Egg(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 26, 29), this.eggs); // for static egg (20,25)
+        }
 
         //create list with falling stones
         this.stones = new ArrayList<>();
-            for (int i = 0; i < random.nextInt(20); i++) {
-                Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
-            }
+        for (int i = 0; i < random.nextInt(20); i++) {
+            Stone.addStone(new Stone(random.nextInt(Game.WIDTH - Game.MAX_X), 0, 33, 27), this.stones);
+        }
     }
 
     //start game action
     public void tick() {
-
         if (State == STATE.GAME) {
-
             this.rabbit.tick();
 
             for (int i = 0; i < eggs.size(); i++) {
@@ -152,21 +149,21 @@ public class Game extends MouseInput implements Runnable {
 
             for (int i = 0; i < eggs.size(); i++) {
                 if (this.eggs.get(i) != null && this.rabbit.boundingBox.intersects(this.eggs.get(i).boundingBox)) {
-                    this.rabbit.addDamega(1);
+                    this.rabbit.addDamega(addEggsDamge);
                     eggs.remove(this.eggs.get(i));
                 }
             }
 
             for (int i = 0; i < duckies.size(); i++) {
                 if (this.duckies.get(i) != null && this.rabbit.boundingBox.intersects(this.duckies.get(i).boundingBox)) {
-                    this.rabbit.addDamega(3);
+                    this.rabbit.addDamega(addDuckyDamge);
                     duckies.remove(this.duckies.get(i));
                 }
             }
 
             for (int i = 0; i < stones.size(); i++) {
                 if (this.stones.get(i) != null && this.rabbit.boundingBox.intersects(this.stones.get(i).boundingBox)) {
-                    this.rabbit.takeDamega(3);
+                    this.rabbit.takeDamega(takeStoneDamge);
                     stones.remove(this.stones.get(i));
                 }
             }
@@ -177,15 +174,16 @@ public class Game extends MouseInput implements Runnable {
 
             } else if (this.rabbit.hitPoints < 0) { //state when the player finished the game as Looser
                 State = STATE.ENDLOST;
-                }
+            }
 
-           // exit from the game if the Esc button is pressed
+            // exit from the game if the Esc button is pressed
             if (isEsc) {
                 System.exit(1);
             }
         }
     }
-        // start to render the game images
+
+    // start to render the game images
     protected void render() {
         this.bufferStrategy = this.display.getCanvas().getBufferStrategy();
         if (this.bufferStrategy == null) {
@@ -242,15 +240,13 @@ public class Game extends MouseInput implements Runnable {
             this.graphics.drawString(textREsume, 310, 280);
         }
 
-
         // show to user that the game is End as winner
         if (State == STATE.ENDWIN) {
             this.graphics.drawImage(this.gameWinImg, 154, 104, 506, 328, null); // draw end state
-            String textWin = this.rabbit.hitPoints + " points" ;
+            String textWin = this.rabbit.hitPoints + " points";
             this.graphics.setColor(Color.white);
             this.graphics.setFont(new Font("Comic Sans MS", Font.BOLD, 28));
             this.graphics.drawString(textWin, 353, 310);
-
         }
 
         // show to user that the game is End as loser
@@ -275,7 +271,6 @@ public class Game extends MouseInput implements Runnable {
 
     @Override
     public void run() {
-
         this.init();
         int fps = 15;
 
@@ -288,7 +283,6 @@ public class Game extends MouseInput implements Runnable {
             now = System.nanoTime();
             delta += (now - lastTimeTicked) / timePerFrame;
             lastTimeTicked = now;
-
 
             if (delta >= 1) {
                 try {

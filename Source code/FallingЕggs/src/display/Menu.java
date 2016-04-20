@@ -1,23 +1,24 @@
 package display;
 
+import game.Game;
 import gfx.Assets;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Menu {
-   private static final int WIDHT = 800;
     private BufferedImage menuImg; // menu image
     private BufferedImage menuBckg; // menu background image
 
     // menu location
-    int x = (WIDHT-170)/2;
-    int y = 180;
+    private int x = (Game.WIDTH - 170) / 2;
+    private int y = 180;
 
     // menu size (according image size)
-    int menuWidth = 201;
-    int menuHeight = 236;
+    private int menuWidth = 201;
+    private int menuHeight = 236;
 
-    public Menu (){
+    public Menu() {
         this.menuImg = Assets.menuButtons;
         this.menuBckg = Assets.menuBackground;
     }
@@ -27,4 +28,3 @@ public class Menu {
         g.drawImage(this.menuImg, this.x, this.y, this.menuWidth, this.menuHeight, null); //draw menu image
     }
 }
-

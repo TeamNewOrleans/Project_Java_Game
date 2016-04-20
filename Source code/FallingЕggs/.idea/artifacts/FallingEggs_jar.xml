@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="FallingЕggs:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Fallingggs_jar</output-path>
+    <root id="archive" name="FallingЕggs.jar">
+      <element id="module-output" name="FallingЕggs" />
+      <element id="library" level="project" name="resources" />
+    </root>
+  </artifact>
+</component>
